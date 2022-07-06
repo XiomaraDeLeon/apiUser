@@ -19,7 +19,7 @@ const router = express.Router();
 
 router.get(
   "/",
-  isTokenValid("Authorization"),
+  isTokenValid("read"),
   asyncHandler(async (req, res) => {
     const users = await listUsers();
     res.json(users);
@@ -28,7 +28,7 @@ router.get(
 
 router.post(
   "/",
-  [isTokenValid("Authorization"), validatorHandler(creaUserSchema, "body")],
+  [isTokenValid("create"), validatorHandler(creaUserSchema, "body")],
   asyncHandler(async (req, res) => {
     const user = await createUsers(req.body);
     res.json(user);
@@ -38,7 +38,7 @@ router.post(
 router.patch(
   "/:id/update",
   [
-    isTokenValid("Authorization"),
+    isTokenValid("update"),
     validatorHandler(getUserSchema, "params"),
     validatorHandler(updateUserSchema, "body"),
   ],
@@ -55,7 +55,7 @@ router.patch(
 
 router.delete(
   "/:id/delete",
-  isTokenValid("Authorization"),
+  isTokenValid("delete"),
   asyncHandler(async (req, res) => {
     const user = await deleteUsers(req.params.id);
     res.json(user);

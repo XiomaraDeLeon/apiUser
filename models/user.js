@@ -1,4 +1,5 @@
 const { Model } = require("sequelize");
+const Rol = require("./role");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -8,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.rol, {
+        foreignKey: "rolId",
+      });
     }
   }
   User.init(
@@ -17,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true,
       },
-
       username: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -34,10 +36,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      rolId: {
+        field: "rolId",
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        references: {
+          model: Rol,
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
     },
     {
       sequelize,
       modelName: "User",
+      tableName: "Users",
       scopes: {
         withoutPassword: {
           attributes: { exclude: ["password"] },
